@@ -46,3 +46,8 @@ class User(AbstractUser):
     REQUIRED_FIELDS=['full_name',]
     USERNAME_FIELD = "email"
     objects = CustomUserManager()
+
+
+class Address(models.Model):
+    location = models.CharField(max_length=600)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
