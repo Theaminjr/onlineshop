@@ -4,7 +4,7 @@ from django.contrib.auth.models import AbstractUser,BaseUserManager
 
 class Sale(models.Model):
     percentage = models.FloatField(null=True)
-    cash = models.IntegerField(null=True)
+    cash = models.DecimalField(null=True,max_digits=10, decimal_places=2)
 
 
 
