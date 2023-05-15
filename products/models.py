@@ -2,6 +2,7 @@ from django.db import models
 from ckeditor.fields import RichTextField
 from django.utils.text import slugify
 from django_cleanup import cleanup
+from core.models import Sale
 # Create your models here.
 
 
@@ -12,6 +13,7 @@ class Category(models.Model):
     name = models.CharField(max_length=100)
     slug = models.SlugField(unique=True,blank=True,)
     sub = models.ForeignKey('self', null=True,blank=True, on_delete=models.CASCADE)
+    sale = models.ForeignKey(Sale,null=True, on_delete=models.SET_NULL)
     def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = slugify(self.name)
@@ -26,6 +28,7 @@ class Product(models.Model):
     slug = models.SlugField(unique=True,null=True,blank=True)
     description =  RichTextField()
     price = models.DecimalField(max_digits=10, decimal_places=2)
+    sale = models.ForeignKey(Sale,null=True, on_delete=models.SET_NULL)
     available = models.BooleanField(default=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
