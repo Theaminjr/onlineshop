@@ -3,8 +3,9 @@ from django.contrib.auth.models import AbstractUser,BaseUserManager
 # Create your models here.
 
 class Sale(models.Model):
-    percentage = models.FloatField(null=True)
-    cash = models.DecimalField(null=True,max_digits=10, decimal_places=2)
+    is_percentage = models.BooleanField(default=True)
+    amount = models.IntegerField(null=True,blank=True)
+    code = models.CharField(max_length=8,null=True,blank=True) #used for users and cart sale
 
 
 
@@ -42,7 +43,6 @@ class User(AbstractUser):
     is_productmanager = models.BooleanField(default=False)
     is_supervisor = models.BooleanField(default=False)
     is_operator = models.BooleanField(default=False)
-    sale = models.ForeignKey(Sale,null=True, on_delete=models.SET_NULL)
     REQUIRED_FIELDS=['full_name',]
     USERNAME_FIELD = "email"
     objects = CustomUserManager()

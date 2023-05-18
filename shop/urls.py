@@ -20,6 +20,9 @@ from django.conf import settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('',include('products.urls')),
+    path('users/',include('core.urls')),
+    path('orders/',include('orders.urls')),
     re_path(r'^ckeditor/', include('ckeditor_uploader.urls')),
 ]
 

@@ -23,12 +23,13 @@ class Category(models.Model):
         return self.name
 
 class Product(models.Model):
-    category = models.ManyToManyField(Category)
+    code = models.IntegerField(unique=True)
+    category = models.ForeignKey(Category, null=True,on_delete=models.SET_NULL)
     name = models.CharField(max_length=200)
     slug = models.SlugField(unique=True,null=True,blank=True)
     description =  RichTextField()
     price = models.DecimalField(max_digits=10, decimal_places=2)
-    sale = models.ForeignKey(Sale,null=True, on_delete=models.SET_NULL)
+    sale = models.ForeignKey(Sale,null=True,blank=True, on_delete=models.SET_NULL)
     available = models.BooleanField(default=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)

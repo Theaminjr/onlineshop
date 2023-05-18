@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import User,Sale
+from .models import User,Sale,Address
 
 "custom admin panel for the custom user"
 class CustomUserAdmin(UserAdmin):
@@ -10,3 +10,4 @@ class CustomUserAdmin(UserAdmin):
 
 admin.site.register(User, CustomUserAdmin)
 admin.site.register(Sale)
+admin.site.register(Address)
