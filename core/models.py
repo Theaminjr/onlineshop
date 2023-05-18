@@ -8,7 +8,6 @@ class Sale(models.Model):
     code = models.CharField(max_length=8,null=True,blank=True) #used for users and cart sale
 
 
-
 class CustomUserManager(BaseUserManager):
 
     def create_user(self, email, password,**extra_fields):
