@@ -11,6 +11,10 @@ class OrderItem(models.Model):
     def price(self):
         return self.product.price * self.count
 
+    @property
+    def discount(self):
+        return self.count * self.product.discount
+
 
 
 
@@ -28,8 +32,15 @@ class Order(models.Model):
         for item in self.items.all():
             total += item.price
         return total
+    
+    @property
+    def discount(self):
+        total = 0
+        for item in self.items.all():
+            total += item.discount
+        return int(total)
 
 
 
     def __str__(self):
-        return f"{self.date} {self.price}"
+        return f"{self.date} {self.price} {self.discount}"

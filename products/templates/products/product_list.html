@@ -1,9 +1,38 @@
 {% extends "base.html" %}
+{%load static%}
 {% block content %}
-     <h1>Products</h1>
-     {%for product in page_obj%}
-     {{product.name}}
-     {%endfor%}
+
+<div class="w-100 text-center d-flex justify-content-center">
+        <h1> دسته بندی ها</h1>
+</div>     
+{%for category in categories%}
+<a href="/products/{{category.slug}}" class="btn btn-primary">{{category.name}}</a>
+{%endfor%}
+   
+   
+   <div class="container text-center">
+        <div class="row">
+    {%for product in page_obj%}
+          <div class="col-md-4">
+
+            <div class="card" style="width: 300px; height: 400px;">
+                <div class="position-relative h-100 w-100">
+                  <img src="{{product.thumbnail.image.url}}" class="position-absolute top-0 start-0 w-100 h-100 img-fluid" alt="...">
+                </div>
+                <div class="card-body">
+                    <h4 class="card-title">{{product.name}} </h4>
+                    <h5 class="card-title">قیمت:
+                        {{product.price}} 
+                    </h5>
+                    <a href="/products/details/{{product.slug}}" class="btn btn-primary"> دیدن جزئیات </a>
+                  </div>
+              </div>
+
+          </div>
+   {%endfor%}
+        </div>
+   </div>
+
 
 
      <div class="pagination">

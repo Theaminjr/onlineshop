@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'ckeditor',
     'ckeditor_uploader',
     'django_cleanup.apps.CleanupConfig',
+
     
 ]
 
@@ -119,6 +120,7 @@ USE_I18N = True
 
 USE_TZ = True
 
+ALLOW_UNICODE_SLUGS = True
 
 
 MEDIA_URL = "/media/"
