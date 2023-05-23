@@ -18,11 +18,13 @@ from django.urls import path,re_path,include
 from django.conf.urls.static import static
 from django.conf import settings
 
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('',include('products.urls')),
     path('users/',include('core.urls')),
     path('orders/',include('orders.urls')),
+    path('api/', include('core.api.urls')),
     re_path(r'^ckeditor/', include('ckeditor_uploader.urls')),
 ]
 

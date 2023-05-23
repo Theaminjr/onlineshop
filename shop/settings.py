@@ -44,6 +44,8 @@ INSTALLED_APPS = [
     'ckeditor',
     'ckeditor_uploader',
     'django_cleanup.apps.CleanupConfig',
+    'rest_framework',
+    'rest_framework_simplejwt',
 
     
 ]
@@ -108,9 +110,8 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
-# Internationalization
-# https://docs.djangoproject.com/en/4.1/topics/i18n/
+#jwt settings
+ALGORITHM = "HS256"
 
 LANGUAGE_CODE = 'en-us'
 

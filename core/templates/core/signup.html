@@ -1,25 +1,79 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="w-100 text-center d-flex justify-content-center">
-  <form class="w-25">
+  <h5 id="message"> </h5>
+  </div>    
+<div class="w-100 text-center d-flex justify-content-center">
+  <form id ="form"class="w-25">
+    {% csrf_token %}
     <div class="mb-3">
-      <label for="namefield" class="form-label">نام و نام خانوادگی </label>
-      <input type="text" class="form-control" id="namefield" aria-describedby="emailHelp">
+      <label  for="namefield" class="form-label">نام و نام خانوادگی </label>
+      <input name="full_name" type="text" class="form-control" id="namefield" aria-describedby="emailHelp">
     </div>
     <div class="mb-3">
         <label for="numberfield" class="form-label">شماره تماس </label>
-        <input type="email" class="form-control" id="numberfield" aria-describedby="emailHelp">
+        <input  name="phone_number" type="email" class="form-control" id="numberfield" aria-describedby="emailHelp">
     </div>
     <div class="mb-3">
         <label for="exampleInputEmail1" class="form-label">ایمیل </label>
-        <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+        <input name="email" type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
     </div>
 
     <div class="mb-3">
       <label for="exampleInputPassword1" class="form-label">کلمه عبور</label>
-      <input type="password" class="form-control" id="exampleInputPassword1">
+      <input name="password" type="password" class="form-control" id="exampleInputPassword1">
     </div>
-    <button type="submit" class="btn btn-primary">ثبت</button>
+    <button id="submit" type="submit" class="btn btn-primary">ثبت</button>
   </form>
 </div>    
+
+
+
+<script>
+
+  function readCookie(name) {
+      var nameEQ = name + "=";
+      var ca = document.cookie.split(';');
+      for (var i = 0; i < ca.length; i++) {
+          var c = ca[i];
+          while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+          if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
+      }
+      return null;
+  }
+  
+  $(document).ready(function(){
+    
+          $("#submit").on('click', function(){
+              event.preventDefault();
+              $.ajax({
+                  url: '/api/signup/',
+                  type : "POST", 
+                  dataType : 'json', 
+                  data : $("#form").serialize(), 
+                  headers: {'X-CSRFToken': readCookie('csrftoken')},
+                  success : function(result) {
+                    console.log("success");
+                    $('#message').text("ثبت نام موفقیت امیز بود. تا چند لحظه دیگر به صفحه ورود فرستاده می شوید");
+                    setTimeout(function() {
+                     window.location.href = "/";
+                       }, 4000);
+                    
+                  },
+                  error: function(response) {
+                    $('#message').text("");
+                    if (response.responseJSON['error']["email"] !== undefined ) {
+                      $('#message').append("<h5>"+response.responseJSON['error']["email"]+"</h5>");}
+                      if (response.responseJSON['error']["phone_number"] !== undefined ) {
+                      $('#message').append("<h5>"+response.responseJSON['error']["phone_number"]+"</h5>");}
+                      if (response.responseJSON['error']["password"] !== undefined ) {
+                      $('#message').append("<h5>"+response.responseJSON['error']["password"]+"</h5>");}                    
+                    
+
+
+                  }
+              })
+          });
+      });
+  </script>
 {% endblock %}
