@@ -1,5 +1,19 @@
 {% extends "base.html" %}
 {% block content %}
+
+  <div class="slider-container mb-4">
+
+          <div class="intro-slide"
+              style="background-image: url(/static/assets/images/noucamp.jpg);">
+              <div class="container intro-content text-right">
+                  <h1 class="intro-title text-white"> فروشگاه نیوکمپ</h1><!-- End .intro-title -->
+                  <a href="category.html" class="btn btn-primary">
+                      <span>محصولات</span>
+                      <i class="icon-long-arrow-left"></i>
+                  </a>
+              </div><!-- End .intro-content -->
+          </div><!-- End .intro-slide -->
+  </div><!-- End .intro-slider-container -->
 <div class="w-100 text-center d-flex justify-content-center">
      <h1>محصولات تازه</h1>
 </div>     
@@ -19,7 +33,7 @@
                  <h5 class="card-title">قیمت:
                      {{product.price}} 
                  </h5>
-                 <a href="/products/details/{{product.slug}}" class="btn btn-primary"> دیدن جزئیات </a>
+                 <a href="/products/details/{{product.slug}}/" class="btn btn-primary"> دیدن جزئیات </a>
                </div>
            </div>
 
@@ -47,7 +61,7 @@
                  <h5 class="card-title">قیمت:
                      {{product.price}} 
                  </h5>
-                 <a href="/products/details/{{product.slug}}" class="btn btn-primary"> دیدن جزئیات </a>
+                 <a href="/products/details/{{product.slug}}/" class="btn btn-primary"> دیدن جزئیات </a>
                </div>
            </div>
 
