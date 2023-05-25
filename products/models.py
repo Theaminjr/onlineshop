@@ -4,6 +4,8 @@ from django.utils.text import slugify
 from django_cleanup import cleanup
 from core.models import Sale
 from decimal import Decimal
+from django.utils.html import mark_safe
+
 # Create your models here.
 
 
@@ -32,6 +34,12 @@ class Image(models.Model):
 
     def __str__(self):
         return self.name
+
+    def img(self):
+       if self.image:
+           print(self.image.url)
+           return mark_safe('<img style="height:125px;" src="%s" />' % self.image.url)
+
 
 class Product(models.Model):
     code = models.IntegerField(unique=True)
@@ -67,6 +75,11 @@ class Product(models.Model):
                 return self.price * self.category.sale.amount/100
         else :
             return 0
+
+    def thumbnail_img(self):
+       if self.thumbnail:
+           print(self.thumbnail.image.url)
+           return mark_safe('<img style="height:125px;" src="%s" />' % self.thumbnail.image.url)
 
     def __str__(self):
         return self.name

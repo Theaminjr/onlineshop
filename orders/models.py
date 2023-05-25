@@ -1,6 +1,6 @@
 from django.db import models
 from products.models import Product
-from core.models import User
+from core.models import User,Address
 # Create your models here.
 
 class OrderItem(models.Model):
@@ -15,6 +15,9 @@ class OrderItem(models.Model):
     def discount(self):
         return self.count * self.product.discount
 
+    def __str__(self):
+        return f"{self.product}" 
+
 
 
 
@@ -25,6 +28,7 @@ class Order(models.Model):
     status = models.CharField(max_length=50,choices=status_choices,default="PENDING")
     items = models.ManyToManyField(OrderItem)
     user = models.ForeignKey(User, on_delete=models.RESTRICT)
+    address = models.ForeignKey(Address,null=True, on_delete=models.RESTRICT)
     
     @property
     def price(self):
