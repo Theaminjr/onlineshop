@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+{%load static%}
+
+{% block content %}
+{% csrf_token %}
+<table class="table table-cart table-mobile">
+    <thead>
+        <tr>
+            <th>محصول</th>
+            <th>قیمت</th>
+            <th>تعداد</th>
+            <th>مجموع</th>
+            <th></th>
+        </tr>
+    </thead>
+
+    <tbody>
+        {%for product in products%}
+        <tr>
+            <td class="product-col">
+                <div class="product">
+                    <figure class="product-media">
+                       
+                            <img src="{{product.thumbnail.image.url}}"
+                                alt="تصویر محصول">
+                        
+                    </figure>
+
+                    <h3 class="product-title">
+                        <a href="#">{{product.name}}</a>
+                    </h3><!-- End .product-title -->
+                </div><!-- End .product -->
+            </td>
+            <td class="price-col">{{product.price}}</td>
+            <td class="quantity-col">
+                <div class="cart-product-quantity">
+                    <input  product_id = {{product.id}} type="number" class="form-control count" value="1" min="1" max="10"
+                        step="1" data-decimals="0" required>
+                </div><!-- End .cart-product-quantity -->
+            </td>
+            <td class="remove-col"><button class="btn-remove"><i
+                        class="icon-close"></i></button></td>
+        </tr>
+        {%endfor%}
+        
+    </tbody>
+</table><!-- End .table table-wishlist -->
+<h2>انتخاب ادرس</h2>
+<select id="address" class="form-select" aria-label="Default select example">
+    {%for address in address%}
+    <option value="{{address.id}}">{{address.location}}</option>
+    {%endfor%}
+</select>
+
+
+<div class="w-100 text-center d-flex justify-content-center">
+    <button id = "submit" product="{{product.id}}" type="button" class="btn btn-primary">  ثبت سفارش</button>
+</div>  
+
+
+<script>
+  function readCookie(name) {
+      var nameEQ = name + "=";
+      var ca = document.cookie.split(';');
+      for (var i = 0; i < ca.length; i++) {
+          var c = ca[i];
+          while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+          if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
+      }
+      return null;
+  }
+
+
+
+
+$(document).ready(function(){
+    $("#submit").on('click', function(){
+    x = $('.count:hidden');
+    console.log(x)
+    
+    products = [];
+    x.each(function() {
+    
+    var inputValue = $(this).val();
+    var id = $(this).attr('product_id');
+
+    product = {product:id , count:inputValue};
+    products.push(product);
+    console.log(products);
+
+     });
+     var address = $('#address').find(":selected").val()
+    //  products = JSON.stringify(products)
+    //  address = JSON.stringify(address)        
+    //  json = '"items":'+products+',"address":'+ address
+    json = {items:products,address:address}
+    json=JSON.stringify(json)
+    
+    $.ajax({
+                  url: '/api/orders/',
+                  type : "POST", 
+                  dataType : 'json', 
+                  data : json,
+                  contentType: 'application/json; charset=utf-8',
+                  headers: {'X-CSRFToken': readCookie('csrftoken')},});
+                  alert(json);
+});
+});
+</script>
+{% endblock %}

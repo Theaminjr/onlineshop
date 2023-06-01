@@ -24,6 +24,7 @@ urlpatterns = [
     path('',include('products.urls')),
     path('users/',include('core.urls')),
     path('orders/',include('orders.urls')),
+    path('api/orders/', include('orders.api.urls')),
     path('api/', include('core.api.urls')),
     re_path(r'^ckeditor/', include('ckeditor_uploader.urls')),
 ]

@@ -1,4 +1,4 @@
-from core.models import User
+from core.models import User,Address
 from rest_framework import serializers
 import re
 
@@ -37,3 +37,21 @@ class SignUpSerializer(serializers.Serializer):
 class LoginSerializer(serializers.Serializer):
     email = serializers.EmailField()
     password = serializers.CharField(write_only=True)
+
+class CreateOtpSerializer(serializers.Serializer):
+    contact = serializers.CharField()
+
+class LoginOtpSerializer(serializers.Serializer):
+    contact = serializers.CharField()
+    otpcode = serializers.CharField()
+
+class ProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['email','phone_number','full_name']
+
+
+class AddressSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Address
+        fields = ['location',"id"]

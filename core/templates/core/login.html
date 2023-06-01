@@ -18,7 +18,9 @@
       <input name="password"type="password" class="form-control" id="exampleInputPassword1">
     </div>
     <button id="submit" class="btn btn-primary">ثبت</button>
+    <a class="btn btn-warning" href="/users/login/otp/">ورود با رمز یکبار مصرف</a>
   </form>
+  
 </div>  
 </div>
 <script>
@@ -34,8 +36,10 @@ function readCookie(name) {
 }
 
 $(document).ready(function(){
+
   
         $("#submit").on('click', function(){
+            
             event.preventDefault();
             $.ajax({
                 url: '/api/login/',

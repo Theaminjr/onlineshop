@@ -4,6 +4,7 @@
 
 <head>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/jquery.cookie/1.4.1/jquery.cookie.min.js"></script>
 
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -61,15 +62,26 @@
                                 <li>
                                   <a href="/products/"> محصولات</a>
                                 </li>
+                                {%if not request.jwt%}
                                 <li>
                                   <a href="/users/login/"> ورود</a>
                                 </li>
+                        
                                 <li>
                                 <a href="/users/signup/"> ثبت نام</a>
                                 </li>
+                                {%endif%}
+                                {%if request.jwt%}
                                 <li>
-                                  <a href="/">  سبد خرید</a>
-                                  </li>
+                                    <a href="/users/profile/"> پروفایل کاربری </a>
+                                </li>
+                                <li>
+                                    <a href="/users/logout/">  خروج از حساب </a>
+                                </li>
+                                {%endif%}
+                                <li>
+                                  <a href="/orders/cart/">  سبد خرید</a>
+                                </li>
                             </ul><!-- End .menu -->
                         </nav><!-- End .main-nav -->
                 </div><!-- End .container -->
@@ -421,6 +433,7 @@
 
     
     <!-- Plugins JS File -->
+    
     <script src="/static/assets/js/jquery.min.js"></script>
     <script src="/static/assets/js/bootstrap.bundle.min.js"></script>
     <script src="/static/assets/js/jquery.hoverIntent.min.js"></script>

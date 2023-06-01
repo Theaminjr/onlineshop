@@ -1,9 +1,8 @@
-from django.shortcuts import render,HttpResponse
+from django.shortcuts import render,HttpResponse,redirect
 from .models import Product,Category
 from django.views import View
 from django.views.generic import ListView,DetailView
 from .forms import CreateProduct
-from django.db.models import Q
 
 
 # Create your views here.
@@ -17,10 +16,12 @@ def get_subcategories(category):
 
 
 class Home(View):
+
     def get(self,request):
         recent = Product.objects.all()
         recommended = Product.objects.filter(recommended=True)
         return render(request, 'products/home.html',{"recent":recent[0:4],"recommended":recommended})
+
 
 
 

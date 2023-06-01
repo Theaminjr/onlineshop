@@ -1,9 +1,198 @@
 {% extends "base.html" %}
+{%load static%}
 {% block content %}
-<div class="w-100 text-center d-flex justify-content-center">
-<h1>سفارش های شما</h1>
-</div>    
-<ul class="list-group">
-    <li class="list-group-item">سفارش تاریخ فلان    وضعیت سفارش</li>
-</ul>
+<a id="show-profile"  class="btn btn-primary">ایجاد تغییرات در پروفایل</a>
+<a id="show-order" class="btn btn-primary">  لیست سفارش های شما </a>
+<a id="show-address" class="btn btn-primary">  اضافه یا حذف ادرس </a>
+
+
+
+<div id="profile-change">
+    <div class="mt-3 mb-3">
+        <div class="w-100 text-center d-flex justify-content-center">
+          <h5 id="message"> </h5>
+          </div>    
+        <div class="w-100 text-center d-flex justify-content-center">
+          <form id ="form"class="w-25">
+            {% csrf_token %}
+            <div class="mb-3">
+              <label  for="namefield" class="form-label">نام و نام خانوادگی </label>
+              <input name="full_name" type="text" class="form-control" id="namefield" aria-describedby="emailHelp">
+            </div>
+            <div class="mb-3">
+                <label for="numberfield" class="form-label">شماره تماس </label>
+                <input  name="phone_number" type="email" class="form-control" id="numberfield" aria-describedby="emailHelp">
+            </div>
+            <div class="mb-3">
+                <label for="exampleInputEmail1" class="form-label">ایمیل </label>
+                <input name="email" type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+            </div>
+        
+            <button id="submit" type="submit" class="btn btn-primary">ثبت</button>
+          </form>
+        </div>    
+        </div>
+</div>
+<!-- ####################################################################################### -->
+
+
+<div id="order-change">
+
+</div>
+
+<!-- ####################################################################################### -->
+<div id="address-change">
+    <div class="w-100 text-center d-flex justify-content-center">
+        <h5 id="message"> </h5>
+        </div>    
+      <div class="w-100 text-center d-flex justify-content-center">
+        <form id ="form2"class="w-25">
+          {% csrf_token %}
+          <div class="mb-3">
+            <label  for="addressfield" class="form-label">  ادرس  </label>
+            <textarea name="location" type="textarea" id="addressfield" cols="50"></textarea>
+          </div>
+      
+          <button id="submit-location" type="submit" class="btn btn-primary">ثبت</button>
+        </form>
+      </div>  
+      <div id="all-addresses">
+
+      </div>
+</div>
+
+
+<script>
+$(document).ready(function() {
+    $('#address-change').hide();
+    $('#order-change').hide();
+    
+    $('#show-profile').click(function() {
+        $('#address-change').hide();
+        $('#order-change').hide();
+        $('#profile-change').show();
+    });
+    $('#show-order').click(function() {
+        $('#address-change').hide();
+        $('#profile-change').hide();
+        $('#order-change').show();
+    });
+    $('#show-address').click(function() {
+        $('#profile-change').hide();
+        $('#order-change').hide();
+        $('#address-change').show();
+    });
+});  
+// ###########################################################
+$.getJSON('/api/profile/', function(data) {
+
+            // Set form fields using received data
+            $('input[name=email]').val(data.email);
+            $('input[name=phone_number]').val(data.phone_number);
+            $('input[name=full_name]').val(data.full_name);
+        }); 
+//####################################################
+function getaddress(){
+$.getJSON('/api/addresses/', function(data) {
+$.each(data, function(index, item) {
+            $("#all-addresses").append(
+                
+            "<li class='list-group-item d-flex justify-content-between align-items-center'>"+item.location+"<button addressid='"+item.id+"'type='button' class='btn btn-danger btn-sm delete-item deleteaddress'><i class='fa fa-trash'>حذف</i></button></li>"
+            );
+        });
+}); 
+}
+getaddress()
+
+//###############################################################
+function readCookie(name) {
+      var nameEQ = name + "=";
+      var ca = document.cookie.split(';');
+      for (var i = 0; i < ca.length; i++) {
+          var c = ca[i];
+          while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+          if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
+      }
+      return null;
+  }
+// ##########################################################
+
+$("#submit").on('click', function(){
+              event.preventDefault();
+              $.ajax({
+                  url: '/api/profile/',
+                  type : "PUT", 
+                  dataType : 'json', 
+                  data : $("#form").serialize(), 
+                  headers: {'X-CSRFToken': readCookie('csrftoken')},
+                  success : function(result) {
+                    $('#message').text("تغییرات موفقیت امیز بود. ");
+                  },
+                  error: function(response) {
+                    $('#message').text("");
+                    if (response.responseJSON['error']["email"] !== undefined ) {
+                      $('#message').append("<h5>"+response.responseJSON['error']["email"]+"</h5>");}
+                      if (response.responseJSON['error']["phone_number"] !== undefined ) {
+                      $('#message').append("<h5>"+response.responseJSON['error']["phone_number"]+"</h5>");}
+                      if (response.responseJSON['error']["password"] !== undefined ) {
+                      $('#message').append("<h5>"+response.responseJSON['error']["password"]+"</h5>");}                    
+                    
+
+
+                  }
+              })
+          });
+//############################################################################################################
+
+$("#address-change").on('click','.deleteaddress', function(){
+              var id = $(this).attr('addressid')
+              $.ajax({
+                  url: '/api/addresses/'+id,
+                  type : "DELETE", 
+                  headers: {'X-CSRFToken': readCookie('csrftoken')},
+                  success : function(result) {
+                    $('#message').text("تغییرات موفقیت امیز بود. ");
+                    $('#all-addresses').empty();
+                    getaddress()
+                  },
+                  error: function(response) {
+                    $('#message').text("ادرس اضافه نشد");
+                  }
+              })
+          });
+//############################################################################################################
+$("#submit-location").on('click', function(){
+              event.preventDefault();
+              $.ajax({
+                  url: '/api/addresses/',
+                  type : "POST", 
+                  dataType : 'json', 
+                  data : $("#form2").serialize(), 
+                  headers: {'X-CSRFToken': readCookie('csrftoken')},
+                  success : function(result) {
+                    $('#all-addresses').empty();
+                    getaddress()
+                  },
+                  error: function(response) {
+
+
+                  }
+              })
+          });
+ //############################################################################################################
+ function getorders(){
+$.getJSON('/api/orders/', function(data) {
+$.each(data, function(index, item) {
+            $("#order-change").append(
+                
+            "<li class='list-group-item d-flex justify-content-between align-items-center'> :تاریخ سفارش"+item.date+" به مبلغ: "+item.price+"<button type='button' class='btn btn-danger btn-sm delete-item'><i class='fa fa-trash'>"+item.status+"</i></button></li>"
+            );
+        });
+}); 
+}
+getorders()
+
+</script>
+
 {% endblock %}
+

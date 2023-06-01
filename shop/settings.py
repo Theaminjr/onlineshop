@@ -58,6 +58,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'core.api.auth.JwtMiddleware'
 ]
 
 ROOT_URLCONF = 'shop.urls'
@@ -144,3 +145,11 @@ AUTH_USER_MODEL = 'core.User'
 
 
 CKEDITOR_UPLOAD_PATH="uploads/"
+
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'noucampmaktab@gmail.com'
+EMAIL_HOST_PASSWORD = 'zdzeuhwdsqdcpasu'
