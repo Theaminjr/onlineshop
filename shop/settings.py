@@ -44,6 +44,9 @@ INSTALLED_APPS = [
     'ckeditor',
     'ckeditor_uploader',
     'django_cleanup.apps.CleanupConfig',
+    'rest_framework',
+    'rest_framework_simplejwt',
+
     
 ]
 
@@ -55,6 +58,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'core.api.auth.JwtMiddleware'
 ]
 
 ROOT_URLCONF = 'shop.urls'
@@ -107,9 +111,8 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
-# Internationalization
-# https://docs.djangoproject.com/en/4.1/topics/i18n/
+#jwt settings
+ALGORITHM = "HS256"
 
 LANGUAGE_CODE = 'en-us'
 
@@ -119,6 +122,7 @@ USE_I18N = True
 
 USE_TZ = True
 
+ALLOW_UNICODE_SLUGS = True
 
 
 MEDIA_URL = "/media/"
@@ -126,8 +130,10 @@ MEDIA_ROOT = os.path.join(BASE_DIR,'media')
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
-STATIC_URL = 'static/'
-STATIC_ROOT = os.path.join(BASE_DIR,'static/')
+STATIC_URL = '/static/'
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, "static"),
+)
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
@@ -139,3 +145,11 @@ AUTH_USER_MODEL = 'core.User'
 
 
 CKEDITOR_UPLOAD_PATH="uploads/"
+
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'noucampmaktab@gmail.com'
+EMAIL_HOST_PASSWORD = 'zdzeuhwdsqdcpasu'

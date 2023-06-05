@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+{%load static%}
+{% block content %}
+<div class="getotp mt-3 mb-3">
+<div class="w-100 text-center d-flex justify-content-center">
+  <h3 id="error"> </h3>
+  </div>    
+<div class="w-100 text-center d-flex justify-content-center">
+  <form id="form" method = "POST" class="w-25">
+    {% csrf_token %}
+      <div class="mb-3">
+      <label for="phonenumber" class="form-label">شماره همراه یا ایمیل خود را وارد کنید </label>
+      <input name="contact"  class="form-control" id="contact" aria-describedby="emailHelp">
+    </div>
+    <button id="getotp" class="btn btn-primary">ثبت</button>
+  </form>
+</div>  
+</div>
+
+
+
+
+<div class="loginotp mt-3 mb-3">
+  <div class="w-100 text-center d-flex justify-content-center">
+    <h3 id="error"> </h3>
+    </div>    
+  <div class="w-100 text-center d-flex justify-content-center">
+    <form id="form1" method = "POST" class="w-25">
+      {% csrf_token %}
+      <div class="mb-3">
+          <label for="contact" class="form-label">  کد به ایمیل یا شماره تماس رو به رو ارسال شده </label>
+          <input readonly name="contact"  class="form-control" id="contact" >
+      </div>
+      <div class="mb-3">
+        <label for="otpcode" class="form-label">  کد ارسالی را وارد کنید </label>
+        <input name="otpcode"  class="form-control" id="otpcode" >
+      </div>
+      <button id="submitotp" class="btn btn-primary">ثبت</button>
+    </form>
+  </div>  
+  </div>
+
+<script>
+
+$(document).ready(function() {
+    $('.loginotp').hide();
+});  
+
+
+
+function readCookie(name) {
+    var nameEQ = name + "=";
+    var ca = document.cookie.split(';');
+    for (var i = 0; i < ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+        if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
+    }
+    return null;
+}
+
+$(document).ready(function(){
+
+  
+        $("#getotp").on('click', function(){
+            
+            event.preventDefault();
+            $.ajax({
+                url: '/api/login/getotp/',
+                type : "POST", 
+                dataType : 'json', 
+                data : $("#form").serialize(), 
+                headers: {'X-CSRFToken': readCookie('csrftoken')},
+                success : function(result) {
+                  $('.loginotp').show();
+                  $('.getotp').hide();
+                  var data = $('#form').find('input[name="contact"]').val();
+                  $('#form1').find('input[name="contact"]').val(data);
+                },
+                error: function(response) {
+                  $('#error').text(response.responseJSON['error']);
+                }
+            })
+        });
+    });
+
+
+    $(document).ready(function(){
+
+  
+$("#submitotp").on('click', function(){
+    
+    event.preventDefault();
+    $.ajax({
+        url: '/api/login/checkotp/',
+        type : "POST", 
+        dataType : 'json', 
+        data : $("#form1").serialize(), 
+        headers: {'X-CSRFToken': readCookie('csrftoken')},
+        success : function(result) {
+          document.cookie = "token="+result['token']+";path=/;";
+          window.location.href = "/";
+        },
+        error: function(response) {
+          $('#error').text(response.responseJSON['error']);
+        }
+    })
+});
+});
+</script>
+
+{% endblock %}
+

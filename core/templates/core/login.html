@@ -1,16 +1,64 @@
 {% extends "base.html" %}
+{%load static%}
 {% block content %}
+<div class="mt-3 mb-3">
 <div class="w-100 text-center d-flex justify-content-center">
-  <form class="w-25">
-    <div class="mb-3">
+  <h3 id="error"> </h3>
+  </div>    
+<div class="w-100 text-center d-flex justify-content-center">
+
+  <form id="form" method = "POST" class="w-25">
+    {% csrf_token %}
+      <div class="mb-3">
       <label for="exampleInputEmail1" class="form-label">ایمیل </label>
-      <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+      <input name="email" type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
     </div>
     <div class="mb-3">
       <label for="exampleInputPassword1" class="form-label">کلمه عبور</label>
-      <input type="password" class="form-control" id="exampleInputPassword1">
+      <input name="password"type="password" class="form-control" id="exampleInputPassword1">
     </div>
-    <button type="submit" class="btn btn-primary">ثبت</button>
+    <button id="submit" class="btn btn-primary">ثبت</button>
+    <a class="btn btn-warning" href="/users/login/otp/">ورود با رمز یکبار مصرف</a>
   </form>
-</div>    
+  
+</div>  
+</div>
+<script>
+function readCookie(name) {
+    var nameEQ = name + "=";
+    var ca = document.cookie.split(';');
+    for (var i = 0; i < ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+        if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
+    }
+    return null;
+}
+
+$(document).ready(function(){
+
+  
+        $("#submit").on('click', function(){
+            
+            event.preventDefault();
+            $.ajax({
+                url: '/api/login/',
+                type : "POST", 
+                dataType : 'json', 
+                data : $("#form").serialize(), 
+                headers: {'X-CSRFToken': readCookie('csrftoken')},
+                success : function(result) {
+                  console.log(result['token'])
+                  document.cookie = "token="+result['token']+";path=/;";
+                  window.location.href = "/";
+                },
+                error: function(response) {
+                  $('#error').text(response.responseJSON['error']);
+                }
+            })
+        });
+    });
+</script>
+
 {% endblock %}
+
