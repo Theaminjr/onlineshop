@@ -20,7 +20,7 @@ class Home(View):
     def get(self,request):
         recent = Product.objects.all()
         recommended = Product.objects.filter(recommended=True)
-        return render(request, 'products/home.html',{"recent":recent[0:4],"recommended":recommended})
+        return render(request, 'products/home.html',{"recent":recent[0:5],"recommended":recommended})
 
 
 
