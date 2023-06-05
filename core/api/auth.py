@@ -77,7 +77,7 @@ def send_email(user,code):
 def send_sms():
     try:
       api = KavenegarAPI('584F65506F34446364466337334B6273694C363352497056653638513448346E784F58743036595470544D3D')
-      params = { 'sender' : '10008663', 'receptor': '09120634285', 'message' :'تست '}
+      params = { 'sender' : '10008663', 'receptor': '0912', 'message' :'تست '}
       response = api.sms_send( params)
     except APIException as e: 
        print(e)
