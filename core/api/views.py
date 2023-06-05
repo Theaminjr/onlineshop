@@ -102,10 +102,12 @@ class CreateOtpView(APIView):
                 if user:
                     otp = create_otp(user.id)
                     print(otp)
-                    # send_email(user, otp)
+                    send_email(user, otp)
+                    print(send_email)
                     return Response({"status":"success"},status=200)
             else:
-                user = User.objects.get(phone_number=contact.validated_data["contact"])
+                
+                user = User.objects.get(phone_number=contact)
                 if user:
                     otp = create_otp(user.id)
                     # send_sms() ارور گیرنده پیامک تبلیغاتی را مسدود کرده
@@ -124,8 +126,9 @@ class LoginOtpView(APIView):
             if "@" in contact:
                 user = User.objects.get(email=contact)
             else:
-                user = User.objects.get(phone_number=contact.validated_data["contact"])
+                user = User.objects.get(phone_number=contact)
             if user:
+                print("error .....")
                 if validate_otp(user.id,data.validated_data['otpcode']):
                     token = create_token(user)
                     return Response({"token":token},status=200) 

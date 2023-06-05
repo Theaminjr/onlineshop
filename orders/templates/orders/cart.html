@@ -102,8 +102,21 @@ $(document).ready(function(){
                   dataType : 'json', 
                   data : json,
                   contentType: 'application/json; charset=utf-8',
-                  headers: {'X-CSRFToken': readCookie('csrftoken')},});
-                  alert(json);
+                  headers: {'X-CSRFToken': readCookie('csrftoken')},
+                  success : function(result) {
+                    $('table').empty();
+                    cart = { products: [] };
+                    cart = JSON.stringify(cart);
+                    document.cookie = "cart="+cart + ";path=/;";
+                    alert("سفارش شما ثبت شد");
+                    
+                  
+                  
+                },
+                error: function(response) {
+                    window.location.href = "/users/login/";
+                }});
+                  
 });
 });
 </script>

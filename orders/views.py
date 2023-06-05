@@ -5,7 +5,7 @@ import json
 
 # Create your views here.
 def cart(request):
-    if request.jwt:
+    
        products = []
        cart = request.COOKIES.get('cart')
        if cart:
@@ -13,11 +13,14 @@ def cart(request):
           for product in cart['products']:
               product = Product.objects.get(id=int(product))
               products.append(product)
-       user = User.objects.get(id = request.jwt['user_id'])
-       address = Address.objects.filter(user=user,is_deleted=False)
+       if request.jwt:
+          user = User.objects.get(id = request.jwt['user_id'])
+          address = Address.objects.filter(user=user,is_deleted=False)
+       else:
+        address = []
        return render(request, "orders/cart.html",{'products':products,'address':address})
-    else:
-        return redirect("/users/login")
+    
+        
 
 
         

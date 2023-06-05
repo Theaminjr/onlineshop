@@ -14,7 +14,7 @@ class OrderView(APIView):
         return Response(orderitems.data)
 
     def post(self,request):
-        
+      if user.jwt:
         orderdetail = CreateOrderSerializer(data=request.data)
         
         if request.jwt:
@@ -31,9 +31,12 @@ class OrderView(APIView):
             address = Address.objects.get(id=orderdetail.validated_data['address'])
             order.address = address
             order.save()
+        return Response({"status":"success"},status=200)
+
+      else:
+        return Response({"status":"error"},status=200)
         
         
-        return Response(orderdetail.errors)
 
 
 
